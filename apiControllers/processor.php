@@ -2,7 +2,7 @@
 
     //include database
     require "../lib/database.php";
-    class productProcessor extends Database{
+    class apiProcessor extends Database{
         private $stmt;
         private $stmt1;
         private $stmt2;
