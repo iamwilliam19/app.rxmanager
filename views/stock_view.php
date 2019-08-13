@@ -127,6 +127,9 @@
             .then((resp) => resp.text())
             .then((data) => stockEditBox.innerHTML = data)
             .catch((err) => console.warn(err))
-        })
+        });
+
+        
+
     }
 </script>

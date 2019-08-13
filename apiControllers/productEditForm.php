@@ -5,10 +5,11 @@
 
     //instantiate apiProcessor
     $processor = new  productProcessor();
-    echo $produuct = $_POST['product'];
+    $product = $_POST['product'];
 
     //fetch the datils of the table
-   // $data = $processor->getFormDetails($product);
+    $data = $processor->getFormDetails($product);
+    
 ?> 
 
 
@@ -25,20 +26,20 @@
             
                     <label for="code">Product ID</label>
                     <div class="list-input">
-                        <input type="text" name="code" id="codeEdit" placeholder="enter procuct id or generate new one" value="" /> 
+                        <input type="text" name="code" id="stockEdit" placeholder="enter procuct id or generate new one" value="<?php echo $data->item_id ?>" /> 
                         <span><i class="fas fa-pencil-alt"></i></span>
                         <div style="clear:both"></div>
                     </div>
                     
                 </div>
 
-                <div class="edit-gen-id" >Generate ID</div>
+                <div class="edit-gen-id" onclick="genStockId()" >Generate ID</div>
                 
                 <span class="stock_error brandError-edit"></span>
                 <div class="prod-list-box">
                     <label for="brand">Brand</label>
                     <div class="list-input">
-                        <input type="text" name="brand" id="brand-edit" placeholder="enter product brand" value=""/>
+                        <input type="text" name="brand" id="stock_brand-edit" placeholder="enter product brand" value="<?php echo $data->brand ?>"/>
                         <span><i class="fas fa-pencil-alt"></i></span>
                         <div style="clear:both"></div>
                     </div>
@@ -48,7 +49,7 @@
                 <div class="prod-list-box">
                     <label for="name">Product name</label>
                     <div class="list-input">
-                        <input type="text" name="item_name" id="name-edit" placeholder="enter product name" value="" />
+                        <input type="text" name="item_name" id="stock_name-edit" placeholder="enter product name" value="<?php echo $data->item_name ?>" />
                         <span><i class="fas fa-pencil-alt"></i></span>
                         <div style="clear:both"></div>
                     </div>
@@ -57,7 +58,7 @@
                 <div class="prod-list-box">
                     <label for="category">Category</label>
                     <div class="list-input">
-                        <input list="cat" name="category" id="category-edit" placeholder="enter product brand" value="" />
+                        <input list="cat" name="category" id="stock_category-edit" placeholder="enter product brand" value="<?php echo $data->category ?>" />
                         <datalist id="cat">
                             <option value="Antiseptics" >
                             <option value="Beverages" >
@@ -77,7 +78,7 @@
                 <div class="prod-list-box">
                     <label for="expiry-date">Expiry date</label>
                     <div class="list-input">
-                        <input  type="text" placeholder="MM/YY" name="date" id="expiry-date-edit" value="" />
+                        <input  type="text" placeholder="MM/YY" name="date" id="stock_expiry-date-edit" value="<?php echo $data->expiryDate ?>" />
                         <span><i class="fas fa-calendar-alt"></i></span>
                         <div style="clear:both"></div>
                     </div>
@@ -91,13 +92,13 @@
                 <div class="prod-child-div">
                     <div class="prod-child-top">Unit</div>
                     <div class="prod-child-bot">
-                        <input type="number" id="unit-edit" name="unit" value="" />
+                        <input type="number" id="stock_unit-edit" name="unit" value="<?php echo $data->unit ?>" />
                     </div>
                 </div>
                 <div class="prod-child-div">
                 <div class="prod-child-top">Form</div>
                     <div class="prod-child-bot">
-                        <input list="forms" id = "form-edit" name="product_form" value="" >
+                        <input list="forms" id = "stock_form-edit" name="product_form" value="<?php echo $data->form ?>" >
                     <datalist id="forms">
                         <option value="Bts">
                         <option value="Cap">
@@ -114,7 +115,7 @@
                 <div class="prod-child-div">
                 <div class="prod-child-top">Price</div>
                     <div class="prod-child-bot">
-                        <input type="number" id="price-edit" name="price" value="" />
+                        <input type="number" id="stock_price-edit" name="price" value="<?php echo $data->price ?>" />
                     </div>
                 </div>
                 <div style="clear:both"></div>
@@ -125,14 +126,17 @@
 
                 
 
-                <div class="add-prod" >
+                <div class="add-prod" onclick="handleEdit()" >
                    Add
                 </div>
 
-                <div class="edit_cancel">Cancel</div>
+                <div class="edit_cancel" onclick="hideStockEdit()">Cancel</div>
             </div>
 
             <button type="reset" id="reset-button" style="display:none"></button>
 
 </form>
         </div>
+
+
+       
