@@ -17,7 +17,7 @@
     $form = trim($_POST['form']);
     $price = trim($_POST['price']);
     $errorLog = trim($_POST['errorLog']);
-
+    
     
       echo  $processor->validateProduct($code, $name, $brand, $category, $expiryDate, $qty, $unit, $form, $price, $errorLog);
 

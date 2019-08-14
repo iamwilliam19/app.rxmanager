@@ -4,7 +4,6 @@
     $name = $_POST['name'];
     $brand = $_POST['brand'];
     $category = $_POST['category'];
-    $expiry_date = $_POST['expiryDate'];
     $unit = $_POST['unit'];
     $form = $_POST['form'];
     $price = $_POST['price'];
@@ -16,4 +15,4 @@
     //instantiate apiProcessor
     $processor = new  productProcessor();
 
-    $processor->updateProduct($code,$name,$brand,$category,$expiry_date,$unit,$form,$price);
+    echo $processor->updateProduct($code,$name,$brand,$category,$unit,$form,$price);

@@ -26,14 +26,14 @@
             
                     <label for="code">Product ID</label>
                     <div class="list-input">
-                        <input type="text" name="code" id="stockEdit" placeholder="enter procuct id or generate new one" value="<?php echo $data->item_id ?>" /> 
+                        <input type="text" name="code" id="stockEdit" readonly="true" placeholder="enter procuct id or generate new one" value="<?php echo $data->item_id ?>" /> 
                         <span><i class="fas fa-pencil-alt"></i></span>
                         <div style="clear:both"></div>
                     </div>
                     
                 </div>
 
-                <div class="edit-gen-id" onclick="genStockId()" >Generate ID</div>
+               <!-- <div class="edit-gen-id" onclick="genStockId()" >Generate ID</div>-->
                 
                 <span class="stock_error brandError-edit"></span>
                 <div class="prod-list-box">
@@ -73,7 +73,7 @@
                         <div style="clear:both"></div>
                     </div>
                 </div>
-
+                <!--
                 <span class="stock_error expiryError-edit"></span>
                 <div class="prod-list-box">
                     <label for="expiry-date">Expiry date</label>
@@ -83,7 +83,7 @@
                         <div style="clear:both"></div>
                     </div>
                 </div>
-
+                -->
                 <span class="stock_error secError-edit"></span>
                 <div class="prod-sec-box">
 

@@ -219,14 +219,14 @@
             }else if(price.value.length == 0){
                 document.getElementsByClassName('secError')[0].innerText = "Please enter  product price";
                 price.focus();
-            }else if(qty.value == 0){
-                document.getElementsByClassName('secError')[0].innerText = "Product Quantity cannot be zero";
+            }else if(qty.value < 1){
+                document.getElementsByClassName('secError')[0].innerText = "Product Quantity invalid";
                 qty.focus();
-            }else if(unit.value == 0){
-                document.getElementsByClassName('secError')[0].innerText = "Product unit cannot be zero";
+            }else if(unit.value < 1){
+                document.getElementsByClassName('secError')[0].innerText = "Product unit invalid";
                 unit.focus();
-            }else if(price.value == 0){
-                document.getElementsByClassName('secError')[0].innerText = "Product price cannot be zero";
+            }else if(price.value < 1){
+                document.getElementsByClassName('secError')[0].innerText = "Product price invalid";
                 price.focus();
             }else{
                 
@@ -257,6 +257,7 @@
                         let errorBox = document.getElementsByClassName("stockRecErrorBox")[0]
                         errorBox.style.display = "block";
                         stockError(data);
+                        
                     }else{
                         document.getElementById('reset-button').click();
                         id.focus();
@@ -292,7 +293,7 @@
     }
         
 
-    const validateDate = (dValue) =>
+    /*const validateDate = (dValue) =>
   {
     let result = true;
     dValue1 = dValue.split('/');
@@ -324,7 +325,7 @@
     result = false;
 
     return result;
-  }
+  }*/
 
   // update list function
   const updateList = () => {
