@@ -125,8 +125,10 @@
             fetch(url, fetchData)
             .then((resp) => resp.text())
             .then((data) => {
-                if(data != "success"){
-                    console.log(data.length)
+                if(data.length != 9 ){
+                    
+                        alert(data)
+                    
                 }else{
                     alert("Update successful");
                     box = document.getElementsByClassName('edit_box')[0].style.display = "none";
