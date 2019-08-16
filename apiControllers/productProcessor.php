@@ -5,17 +5,21 @@
     class productProcessor extends Database{
         private $stmt;
         private $token;
+        private $token_name;
 
         
         public function __construct(){
             //echo "processor on";
             session_start();
-           if(isset($_SESSION['token'])){
+            if(isset($_SESSION['token'])){
                 $this->token = $_SESSION['token'];
+                $this->stmt = $this->connect()->prepare("SELECT * FROM users WHERE uname = ?  ");
+                $this->stmt->execute([$this->token]);
+                $detail = $this->stmt->fetchObject();
+                $this->token_name = $detail->fname.' '. $detail->lname;
             }else{
                 $this->token = '';
             }
-      
 
         }
 
@@ -37,10 +41,24 @@
                 WHERE item_id = '$code'  ");
                 try{
                     $this->stmt->execute();
-                    return "success";
+                    $this->stmt = $this->connect()->prepare("INSERT INTO
+                    entry_record 
+                    (item_name,item_id,category,unit,form,price,modified_by,brand,activity)
+                    VALUE
+                    ('$name','$code','$category','$unit','$form','$price','$this->token_name','$brand','Product modified generally')
+                    ");
+
+                    try{
+                        $this->stmt->execute();
+                        return 'success';
+                    }catch(PDOException $e){
+                        return $e->getMessage();
+                    }
                 }catch(PDOException $e){
                     return $e->getMessage();
                 }
+
+                
             }
         }
         

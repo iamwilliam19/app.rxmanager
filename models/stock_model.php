@@ -11,7 +11,7 @@
     private $stmt;
 
     function __construct() {
-        echo "stock model";
+        //echo "stock model";
     }
 
     public function getStock(){

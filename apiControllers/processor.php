@@ -350,11 +350,21 @@
                             $this->stmt->execute();
                             return "success";
                         }catch(PDOException $e){
-                            return 'error0'.$e->getMessage();
+                            return 'error 10'.$e->getMessage();
                         }
                     }
                 }
                 
+            }catch(PDOException $e){
+                return $e->getMessage();
+            }
+        }
+
+        public function deleteList($uname){
+            $this->stmt = $this->connect()->prepare("DELETE FROM temp_stock WHERE reg_uname = '$uname' ");
+            try{
+                $this->stmt->execute();
+                return "success";
             }catch(PDOException $e){
                 return $e->getMessage();
             }
