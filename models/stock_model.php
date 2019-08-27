@@ -35,19 +35,26 @@
       $this->stmt->execute();
       $row = $this->stmt->rowCount();
       return $stock = $this->stmt->fetchObject();
-  }
+    }
 
-  public function getOtherProduct($product){
-    $this->stmt = $this->connect()->prepare("SELECT
-     *
-     FROM stock
-     WHERE item_name = '$product'
-     
-    ");
-    $this->stmt->execute();
-    $row = $this->stmt->rowCount();
-    return $stock = $this->stmt->fetchAll();
-}
+    public function getOtherProduct($product){
+      $this->stmt = $this->connect()->prepare("SELECT
+      *
+      FROM stock
+      WHERE item_name = '$product'
+      
+      ");
+      $this->stmt->execute();
+      $row = $this->stmt->rowCount();
+      return $stock = $this->stmt->fetchAll();
+    }
+    
+
+    public function getAnalysis($prod_id){
+      $this->stmt = $this->connect()->prepare("SELECT *  FROM entry_record WHERE item_id = '$prod_id' order by id DESC ");
+      $this->stmt->execute();
+      return $this->stmt->fetchAll();
+    }
 
   
   }
