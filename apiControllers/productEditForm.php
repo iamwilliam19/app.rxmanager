@@ -14,7 +14,7 @@
 
 
 
-<div class="prod-box " style="width:100%;">
+<div class="prod-box " style="width:100%; height:1vh;">
         <form>
             <div class="prod-sub-title">
                 Edit product

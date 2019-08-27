@@ -99,7 +99,7 @@
       </span></a>
     </li>
 
-    <a href="index"><li>
+    <a href="cashier"><li>
       <span class="pane-icon">
         <i class="fas fa-money-bill-alt"></i>
       </span>

@@ -60,6 +60,7 @@
     <div class="stock-edit">
         Edit
     </div>
+    
 </section>
 
 <br>
@@ -73,7 +74,8 @@
                 <th>Registered on</th>
                 <th>Quantity</th>
                 <th>To expire</th>
-                <th>Details</th>
+                <th>Edit</th>
+               
             </tr>
             </thead>
             <tbody>
@@ -86,13 +88,22 @@
                 <td><?php echo $stock['quantity'] ?></td>
                 <td><?php echo $stock['expiryDate']?></td>
                 <td>
-                <a href="stock_view<?php //echo '?product='.$stock['item_name'] ?>"> <div class="more">more</div></a>
+                 <div class="more" onclick="batchEdit('<?php echo $stock['id']; ?>')">edit</div>
                 </td>
+                <!--
+                <td>
+                <a href="stockBatch<?php //echo '?product='.$stock['item_name'] ?>"> <div class="more">more</div></a>
+                </td>
+                -->
             </tr>
 
             <?php endforeach ?>
             </tbody>
         </table>
+
+        <a href="stockBatch<?php echo '?product-id='.$stock['item_id'] ?>"><div class="stock-edit">
+        Updates
+        </div></a>
 
 </section>
 
@@ -129,7 +140,31 @@
             .catch((err) => console.warn(err))
         });
 
-        
-
+    
     }
+
+    const batchEdit = (id) => {
+        showModal();
+
+        let batchEditBox = document.getElementsByClassName('batch-edit-box')[0];
+        batchEditBox.style.display = 'block';
+        let url = 'apiControllers/batchEdit.php';
+
+        let formData = new FormData();
+        formData.append('id',id);
+
+        let fetchData = {
+            method: 'POST',
+            body: formData,
+            headers: new Headers
+        }   
+
+        fetch(url, fetchData)
+        .then((resp) => resp.text())
+        .then((data) => {
+            batchEditBox.innerHTML = data;
+        })
+        .catch((err) => console.warn(err))
+    }
+
 </script>
