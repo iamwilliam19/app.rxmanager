@@ -1,4 +1,7 @@
-
+<?php
+ //get page url
+  $url = $_SERVER['REQUEST_URI'];
+?>
 
 
 
@@ -35,6 +38,10 @@
     <!--product receipt box starts-->
     <div class="receipt-box"></div>
     <!-- product receipt box ends-->
+
+    <!--product debt box starts-->
+    <div class="debt-pay-box"></div>
+    <!-- product debt box ends-->
 </div>
 
 <!-- include javascript and other files-->
@@ -42,6 +49,215 @@
 <script src="src/js/customJquery.js"></script>
 
 <script>
+
+    window.onload = (e) => {
+       countExp();
+       let d = new Date();
+        let day = d.getDate();
+        let month = d.getMonth() + 1;
+        let year =  d.getYear() - 100;
+        let url = '<?php echo $url ?>';
+
+        //check if we are in sales page
+        if(url == '/app.rxmanager/sales'){
+            fetchSales(day,month,year);
+
+            document.getElementById('day').value = day;
+            document.getElementById('month').value = month;
+            document.getElementById('year').value = year;
+        }else if(url == '/app.rxmanager/stockAdd'){
+            //list my record if any
+        updateList();
+        
+        //get elements
+        let add = document.getElementsByClassName('add-prod')[0];
+        let generator = document.getElementsByClassName('gen-id')[0];
+        let id = document.getElementById('code');
+        let brand = document.getElementById('brand');
+        let category = document.getElementById('category');
+        let prodName = document.getElementById('name');
+        let expiryDate = document.getElementById('expiry-date');
+        let unit = document.getElementById('unit');
+        let form = document.getElementById('form');
+        let price = document.getElementById('price');
+        let errorLog = document.getElementById('error-log');
+        let qty = document.getElementById('qty');
+        let alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+        //on clicking genetor
+        generator.addEventListener('click', (e) => {
+            let rand_value1 = Math.floor(Math.random() * 26);
+            let rand_value2 = Math.floor(Math.random() * 26);
+            let rand_number = Math.floor(Math.random() * (9999 - 1000 ) + 1000);
+            let idValue = alpha[rand_value1] + alpha[rand_value2] + rand_number;
+            id.value = idValue;
+           // fetchValue(idValue);
+        });
+
+        //on input of code
+        id.addEventListener('input', (e) => {
+           let code = e.target.value;
+           let url = 'apiControllers/matchProduct.php';
+
+           let formData = new FormData();
+           formData.append('code',code);
+
+           let fetchData = {
+               method:'POST',
+               body: formData,
+               headers: new Headers
+           }
+
+           fetch(url, fetchData)
+           .then((resp) => resp.json())
+           .then((data) => {
+                let {name,brand,category,unit,form,price} = data;
+               
+                let autobrand = document.getElementById('brand').value = brand;
+                let autocategory = document.getElementById('category').value = category;
+                let autoprodName = document.getElementById('name').value = name;
+                let autoexpiryDate = document.getElementById('expiry-date').focus();
+                let autounit = document.getElementById('unit').value = unit;
+                let autoform = document.getElementById('form').value = form;
+                let autoprice = document.getElementById('price').value = price;
+                
+           }).catch((err) => console.warn(err))
+        });
+
+        //on clicking add
+        add.addEventListener('click', (e) => {
+        
+            //erase all stock error
+            document.getElementsByClassName('stock_error')[0].innerText = '';
+            if(id.value.length < 6 ){
+                document.getElementsByClassName('idError')[0].innerText = "Please enter an Id of 6 characters";
+                id.value = '';
+                id.focus();
+            }else if(brand.value.length == 0){
+                document.getElementsByClassName('brandError')[0].innerText = "Please enter a product brand";
+                brand.focus();
+            }else if(prodName.value.length == 0){
+                document.getElementsByClassName('nameError')[0].innerText = "Please enter a product name";
+                prodName.focus();
+            }else if(category.value.length == 0){
+                document.getElementsByClassName('catError')[0].innerText = "Please enter a product category";
+                category.focus();
+            }else if(!validateDate(expiryDate.value)){
+                document.getElementsByClassName('expiryError')[0].innerText = "Please enter expiry date in correct format";
+                expiryDate.focus();
+            }else if(qty.value.length == 0){
+                document.getElementsByClassName('secError')[0].innerText = "Please enter product quantity";
+                qty.focus();
+            }else if(unit.value.length == 0){
+                document.getElementsByClassName('secError')[0].innerText = "Please enter  product unit";
+                unit.focus();
+            }else if(form.value.length == 0){
+                document.getElementsByClassName('secError')[0].innerText = "Please enter  product form";
+                form.focus();
+            }else if(price.value.length == 0){
+                document.getElementsByClassName('secError')[0].innerText = "Please enter  product price";
+                price.focus();
+            }else if(qty.value < 1){
+                document.getElementsByClassName('secError')[0].innerText = "Product Quantity invalid";
+                qty.focus();
+            }else if(unit.value < 1){
+                document.getElementsByClassName('secError')[0].innerText = "Product unit invalid";
+                unit.focus();
+            }else if(price.value < 1){
+                document.getElementsByClassName('secError')[0].innerText = "Product price invalid";
+                price.focus();
+            }else{
+                
+                let postFormData = new FormData();
+                postFormData.append("code",id.value);
+                postFormData.append("name",prodName.value);
+                postFormData.append("brand",brand.value);
+                postFormData.append("category",category.value);
+                postFormData.append("expiryDate",expiryDate.value);
+                postFormData.append("qty",qty.value);
+                postFormData.append("unit",unit.value);
+                postFormData.append("form",form.value);
+                postFormData.append("price",price.value);
+                postFormData.append("errorLog",errorLog.value);
+                postData = {
+                    method: 'POST',
+                    body: postFormData,
+                    headers: new Headers
+                }
+
+                let postUrl = "apiControllers/stockTempProcessor.php";
+
+                fetch(postUrl, postData)
+                .then((resp) => resp.text())
+                .then((data) => {
+                    if(data != "success"){
+                        showModal();
+                        let errorBox = document.getElementsByClassName("stockRecErrorBox")[0]
+                        errorBox.style.display = "block";
+                        stockError(data);
+                        
+                    }else{
+                        document.getElementById('reset-button').click();
+                        id.focus();
+                        updateList();
+                    }
+                   
+                })
+                .catch((err) => console.log(err))
+            }
+
+        });
+
+        }else if(url == '/app.rxmanager/expenses'){
+            
+            d = new Date();
+            let date = d.getDate();
+            let month = d.getMonth();
+            month += 1;
+            let year = d.getYear();
+            if(date < 10){
+              date = '0' + date;
+            
+            }
+
+            if(month < 10){
+              month = '0' + month;
+            
+            }
+            year -= 100;
+        
+            listExp(date,month,year);
+        
+            loadExp();
+        }
+
+        
+       
+    }
+
+    //sales start
+    const fetchSales = (d,m,y) => {
+          
+          let url = "apiControllers/sales.php";
+
+          let formData = new FormData();
+          formData.append('day',d);
+          formData.append('month',m);
+          formData.append('year',y);
+          let fetchData = {
+              method: "POST",
+              body: formData,
+              headers: new Headers
+          }
+
+          fetch(url, fetchData)
+          .then((resp) => resp.text())
+          .then((data) => {
+                document.getElementsByClassName('up-table')[0].innerHTML = data;
+                fetchTotal(d,m,y);
+          }).catch((err) => console.warn(err));
+      }
+
+    //sales end
     
     //js for edit form
     const hideEditForm = () => {
@@ -467,6 +683,107 @@
     }
     //cashier js ends
 
+
+    //expenses starts
+    const deleteExp = (event) => {
+        let deleteId = event.target.dataset.delete;
+        let date = event.target.dataset.day;
+        let month = event.target.dataset.month;
+        let year = event.target.dataset.year;
+        let url = "apiControllers/expDelete.php";
+
+        let formData = new FormData();
+        formData.append('id',deleteId );
+        let fetchData = {
+            method: 'POST',
+            body: formData,
+            headers: new Headers
+        }
+
+        fetch(url, fetchData)
+        .then((resp) => resp.text())
+        .then((data) => {
+            d = new Date();
+           
+            listExp(date,month,year);
+
+        })
+        .catch((err) => console.warn(err));
+        
+    }
+
+    const moreExp = (event) => {
+        let date = event.target.dataset.date;
+        let month = event.target.dataset.month;
+        let year = event.target.dataset.year;
+        listExp(date,month,year);
+    }
+
+    //expenses ends
+
+    //debt paynment starts
+    const hideDebtPay = () => {
+        let box = document.getElementsByClassName('debt-pay-box')[0];
+        box.style.display = "none";
+        hideModal();
+    }
+
+    const showAmt = (debt) => {
+        document.getElementById('debtAmt').textContent = debt;
+        document.getElementById('debtInput').focus();
+        return debt;
+    }
+
+    const submitPayment = (id, debt) => {
+        
+        let amt = document.getElementById('debtInput');
+        if(amt.value.length < 1 ){
+            document.getElementById('error').textContent = "Please enter valid amount";
+            
+            amt.focus();
+        }else{
+            let confirmation = confirm("Click ok to complete transaction");
+            if(confirmation){
+                let url = "apiControllers/debtComplete.php";
+
+                let formData = new FormData();
+                formData.append('debt',debt );
+                formData.append('id',id);
+                formData.append('amt',amt.value);
+                let fetchData = {
+                    method: 'POST',
+                    body: formData,
+                    headers: new Headers
+                }
+
+                fetch(url, fetchData)
+                .then((resp) => resp.text())
+                .then((data) => {
+                    if(data == "success"){
+                        location.reload();
+                    }
+                })
+                .catch((err) => console.warn(err));
+            }
+        }
+    }
+    //debt payment ends
+
+    //expired product count
+        const countExp = () => {
+            let url = "apiControllers/countExp.php";
+
+            
+
+            fetch(url)
+            .then((resp) => resp.text())
+            .then((data) => {
+                
+               document.getElementsByClassName('danger')[0].textContent = data;
+            })
+            .catch((err) => console.warn(err));
+        }
+    //expred product count end
 
 
     //date validation

@@ -98,8 +98,11 @@
                 }
                 
                 //update in stock table
+                $exp = explode('/',$expiryDate,2);
+                $month = $exp[0];
+                $year = $exp[1];
                 $this->stmt = $this->connect()->prepare("UPDATE stock 
-                SET expiryDate = '$expiryDate', quantity = '$qty' WHERE id = '$id' ");
+                SET expiryDate = '$expiryDate', quantity = '$qty', exp_month = '$month', exp_year = '$year' WHERE id = '$id' ");
                try{
                 $this->stmt->execute();
                 

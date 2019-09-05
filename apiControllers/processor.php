@@ -29,10 +29,13 @@
 
         public function recordProduct($code, $name, $brand, $category, $expiryDate, $qty, $unit, $form, $price, $errorLog){
             $batch_id = mt_rand(000000,999999);
+            $exp = explode('/',$expiryDate,2);
+            $month = $exp[0];
+            $year = $exp[1];
             $this->stmt = $this->connect()->prepare("INSERT INTO temp_stock 
-            (item_name, item_id,brand,category, expiryDate, quantity, unit, form, price, error_log, registered_by, reg_uname,batch_id) 
+            (item_name, item_id,brand,category, expiryDate, quantity, unit, form, price, error_log, registered_by, reg_uname,batch_id,exp_month,exp_year) 
             VALUES 
-            ('$name','$code','$brand','$category','$expiryDate','$qty','$unit','$form','$price','$errorLog','$this->name','$this->token','$batch_id') ");
+            ('$name','$code','$brand','$category','$expiryDate','$qty','$unit','$form','$price','$errorLog','$this->name','$this->token','$batch_id','$month','$year') ");
             try{
                 $this->stmt->execute();
                 return "success";
@@ -42,6 +45,9 @@
         }
 
         public function updateRecord($code, $name, $brand, $category, $expiry_date, $qty, $unit, $form, $price, $error_log,$edit_id){
+            $exp = explode('/',$expiry_date,2);
+            $month = $exp[0];
+            $year = $exp[1];
             $this->stmt = $this->connect()->prepare("UPDATE temp_stock
              SET
              item_name = '$name',
@@ -53,7 +59,9 @@
              unit = '$unit',
              form = '$form',
              price = '$price',
-             error_log = '$error_log'
+             error_log = '$error_log',
+             exp_month = '$month',
+             exp_year = '$year'
              WHERE
              id = '$edit_id'
 
@@ -68,6 +76,9 @@
         }
 
         public function validateProduct($code, $name, $brand, $category, $expiryDate, $qty, $unit, $form, $price, $errorLog){
+            $exp = explode('/',$expiryDate,2);
+            $month = $exp[0];
+            $year = $exp[1];
             $this->stmt = $this->connect()->prepare("SELECT * FROM stock WHERE item_id = ? ");
             try{
                 $this->stmt->execute([$code]);
@@ -260,10 +271,13 @@
                                 return 'error1'.$e->getMessage();
                             }
                             //insert into stock table
+                            $exp = explode('/',$expiryDate,2);
+                            $month = $exp[0];
+                            $year = $exp[1];
                             $this->stmt = $this->connect()->prepare("INSERT INTO stock
-                            (item_name,item_id,batch_id,brand,category,expiryDate,quantity,unit,form,price,error_log,registered_by,registered_on,reg_uname)                    
+                            (item_name,item_id,batch_id,brand,category,expiryDate,quantity,unit,form,price,error_log,registered_by,registered_on,reg_uname,exp_month,exp_year)                    
                             VALUES
-                            ('$item_name','$item_id','$batch_id','$brand','$category','$expiryDate','$qty','$unit','$form','$price','$error_log','$registered_by','$registered_on','$reg_uname')");
+                            ('$item_name','$item_id','$batch_id','$brand','$category','$expiryDate','$qty','$unit','$form','$price','$error_log','$registered_by','$registered_on','$reg_uname','$month','$year')");
                             try{
                                 $this->stmt->execute();
                             }catch(PDOException $e){
@@ -291,10 +305,13 @@
                             }
                         }else{
                              //insert into stock table
+                             $exp = explode('/',$expiryDate,2);
+                             $month = $exp[0];
+                             $year = $exp[1];
                              $this->stmt = $this->connect()->prepare("INSERT INTO stock
-                             (item_name,item_id,batch_id,brand,category,expiryDate,quantity,unit,form,price,error_log,registered_by,registered_on,reg_uname)                    
+                             (item_name,item_id,batch_id,brand,category,expiryDate,quantity,unit,form,price,error_log,registered_by,registered_on,reg_uname,exp_month,exp_year)                    
                              VALUES
-                             ('$item_name','$item_id','$batch_id','$brand','$category','$expiryDate','$qty','$unit','$form','$price','$error_log','$registered_by','$registered_on','$reg_uname')");
+                             ('$item_name','$item_id','$batch_id','$brand','$category','$expiryDate','$qty','$unit','$form','$price','$error_log','$registered_by','$registered_on','$reg_uname','$month','$year')");
                              try{
                                 $this->stmt->execute();
                             }catch(PDOException $e){
@@ -323,11 +340,14 @@
                             }
                         }
                     }else{
+                        $exp = explode('/',$expiryDate,2);
+                        $month = $exp[0];
+                        $year = $exp[1];
                         //insert into stock table
                         $this->stmt = $this->connect()->prepare("INSERT INTO stock
-                        (item_name,item_id,batch_id,brand,category,expiryDate,quantity,unit,form,price,error_log,registered_by,registered_on,reg_uname)                    
+                        (item_name,item_id,batch_id,brand,category,expiryDate,quantity,unit,form,price,error_log,registered_by,registered_on,reg_uname,exp_month,exp_year)                    
                         VALUES
-                        ('$item_name','$item_id','$batch_id','$brand','$category','$expiryDate','$qty','$unit','$form','$price','$error_log','$registered_by','$registered_on','$reg_uname')");
+                        ('$item_name','$item_id','$batch_id','$brand','$category','$expiryDate','$qty','$unit','$form','$price','$error_log','$registered_by','$registered_on','$reg_uname','$month','$year')");
                         try{
                             $this->stmt->execute();
                         }catch(PDOException $e){
@@ -371,6 +391,27 @@
         }
         
 
-        
+        public function getMatch($code) {
+            $this->stmt = $this->connect()->prepare("SELECT * FROM stock WHERE item_id = '$code' LIMIT 1 ");
+            try{
+                $this->stmt->execute();
+                if($this->stmt->rowCount() > 0){
+                    $match = $this->stmt->fetchObject();
+                   /* $obj->name = $match->item_name;
+                    $obj->brand = $match->brand;
+                    $obj->category = $match->category;
+                    $obj->unit = $match->unit;
+                    $obj->form = $match->form;
+                    $obj->price = $match->price;*/
+
+                   $obj = array('name'=>$match->item_name,'brand'=> $match->brand, 'category'=>$match->category,'unit'=>$match->unit,'form'=>$match->form,'price'=>$match->price);
+
+                    $json = json_encode($obj);
+                    return $json;
+                }
+            }catch(PDOException $e){
+               // return $e->getMessage();
+            }
+        }
     }
 ?>

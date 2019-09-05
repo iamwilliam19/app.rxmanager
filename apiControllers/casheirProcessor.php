@@ -128,6 +128,7 @@
         }
 
         public function pay($uname,$name,$addr,$phone,$transaction,$receipt_id,$disccount,$amt_paid){
+            date_default_timezone_set('Africa/Lagos');
             $d = date('d');
             $m = date('m');
             $y = date('y');

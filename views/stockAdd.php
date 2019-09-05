@@ -16,7 +16,7 @@
             
                     <label for="code">Product ID</label>
                     <div class="list-input">
-                        <input type="text" name="code" id="code" placeholder="enter procuct id or generate new one" />
+                        <input type="text" name="code" id="code" placeholder="enter procuct id or generate new one" autofocus />
                         <span><i class="fas fa-pencil-alt"></i></span>
                         <div style="clear:both"></div>
                     </div>
@@ -151,127 +151,7 @@
 
 
 <script>
-    window.onload = (event) => {
-        
-
-        //list my record if any
-        updateList();
-        
-        //get elements
-        let add = document.getElementsByClassName('add-prod')[0];
-        let generator = document.getElementsByClassName('gen-id')[0];
-        let id = document.getElementById('code');
-        let brand = document.getElementById('brand');
-        let category = document.getElementById('category');
-        let prodName = document.getElementById('name');
-        let expiryDate = document.getElementById('expiry-date');
-        let unit = document.getElementById('unit');
-        let form = document.getElementById('form');
-        let price = document.getElementById('price');
-        let errorLog = document.getElementById('error-log');
-        let qty = document.getElementById('qty');
-        let alpha = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-        //on clicking genetor
-        generator.addEventListener('click', (e) => {
-            let rand_value1 = Math.floor(Math.random() * 26);
-            let rand_value2 = Math.floor(Math.random() * 26);
-            let rand_number = Math.floor(Math.random() * (9999 - 1000 ) + 1000);
-            let idValue = alpha[rand_value1] + alpha[rand_value2] + rand_number;
-            id.value = idValue;
-           // fetchValue(idValue);
-        });
-
-        //on input of code
-        id.addEventListener('input', (e) => {
-            //fetchValue(e.target.value);
-        });
-
-        //on clicking add
-        add.addEventListener('click', (e) => {
-        
-            //erase all stock error
-            document.getElementsByClassName('stock_error')[0].innerText = '';
-            if(id.value.length < 6 ){
-                document.getElementsByClassName('idError')[0].innerText = "Please enter an Id of 6 characters";
-                id.value = '';
-                id.focus();
-            }else if(brand.value.length == 0){
-                document.getElementsByClassName('brandError')[0].innerText = "Please enter a product brand";
-                brand.focus();
-            }else if(prodName.value.length == 0){
-                document.getElementsByClassName('nameError')[0].innerText = "Please enter a product name";
-                prodName.focus();
-            }else if(category.value.length == 0){
-                document.getElementsByClassName('catError')[0].innerText = "Please enter a product category";
-                category.focus();
-            }else if(!validateDate(expiryDate.value)){
-                document.getElementsByClassName('expiryError')[0].innerText = "Please enter expiry date in correct format";
-                expiryDate.focus();
-            }else if(qty.value.length == 0){
-                document.getElementsByClassName('secError')[0].innerText = "Please enter product quantity";
-                qty.focus();
-            }else if(unit.value.length == 0){
-                document.getElementsByClassName('secError')[0].innerText = "Please enter  product unit";
-                unit.focus();
-            }else if(form.value.length == 0){
-                document.getElementsByClassName('secError')[0].innerText = "Please enter  product form";
-                form.focus();
-            }else if(price.value.length == 0){
-                document.getElementsByClassName('secError')[0].innerText = "Please enter  product price";
-                price.focus();
-            }else if(qty.value < 1){
-                document.getElementsByClassName('secError')[0].innerText = "Product Quantity invalid";
-                qty.focus();
-            }else if(unit.value < 1){
-                document.getElementsByClassName('secError')[0].innerText = "Product unit invalid";
-                unit.focus();
-            }else if(price.value < 1){
-                document.getElementsByClassName('secError')[0].innerText = "Product price invalid";
-                price.focus();
-            }else{
-                
-                let postFormData = new FormData();
-                postFormData.append("code",id.value);
-                postFormData.append("name",prodName.value);
-                postFormData.append("brand",brand.value);
-                postFormData.append("category",category.value);
-                postFormData.append("expiryDate",expiryDate.value);
-                postFormData.append("qty",qty.value);
-                postFormData.append("unit",unit.value);
-                postFormData.append("form",form.value);
-                postFormData.append("price",price.value);
-                postFormData.append("errorLog",errorLog.value);
-                postData = {
-                    method: 'POST',
-                    body: postFormData,
-                    headers: new Headers
-                }
-
-                let postUrl = "apiControllers/stockTempProcessor.php";
-
-                fetch(postUrl, postData)
-                .then((resp) => resp.text())
-                .then((data) => {
-                    if(data != "success"){
-                        showModal();
-                        let errorBox = document.getElementsByClassName("stockRecErrorBox")[0]
-                        errorBox.style.display = "block";
-                        stockError(data);
-                        
-                    }else{
-                        document.getElementById('reset-button').click();
-                        id.focus();
-                        updateList();
-                    }
-                   
-                })
-                .catch((err) => console.log(err))
-            }
-
-        });
-
-    }
-
+    
     const fetchValue = (idValue) => {
         url = "apiControllers/stockAddProcessor.php";
 

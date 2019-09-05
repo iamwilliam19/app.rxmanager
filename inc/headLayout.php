@@ -3,7 +3,7 @@
     <i class="fas fa-th menu1" onclick="paneHandle()"></i>
     <i class="fas fa-th menu2" onclick="secPaneHandle()"></i>
   </div>
-  <div class="head-logo">RX-manager</div>
+  <a href="index"><div class="head-logo">RX-manager</div></a>
   <div class="head-search">
     <input type="search" placeholder="search..." name="searchValue" id="search-box" />
     <span> <i class="fas fa-search" id="search-but" ></i> </span>
@@ -28,10 +28,10 @@
       <div class="not-counter normal-not">9</div>
       <i class="far fa-bell"></i>
     </div>
-    <div class="not-containers">
+    <a href="expired"><div class="not-containers">
       <div class="not-counter danger">0</div>
       <i class="fas fa-exclamation-triangle"></i>
-    </div>
+    </div></a>
   </div>
 
   <div style="clear:both"></div>
@@ -90,14 +90,19 @@
 
 <aside class="side-pane">
   <ul>
-    <li>
-      <a href="index"><span class="pane-icon">
+    
+      <a href="index">
+      <li>
+      <span class="pane-icon">
+
         <i class="fas fa-tachometer-alt"></i>
       </span>
       <span class="pane-text">
         Dashboard
-      </span></a>
-    </li>
+      </span>
+      </li>
+      </a>
+    
 
     <a href="cashier"><li>
       <span class="pane-icon">
@@ -124,14 +129,14 @@
     </li></a>
 
 
-    <li >
+   <a href="expired"> <li >
       <span class="pane-icon">
         <i class="fas fa-skull-crossbones"></i>
       </span>
       <span class="pane-text">
          Expired
       </span>
-    </li>
+    </li></a>
 
     <a href="stockAdd"><li >
       <span class="pane-icon">
@@ -158,33 +163,33 @@
       </span>
     </li>-->
 
-    <li >
+   <a href="sales"> <li >
       <span class="pane-icon">
         <i class="fab fa-stack-overflow"></i>
       </span>
       <span class="pane-text">
          Sales
       </span>
-    </li>
+    </li></a>
 
-    <li >
+    <a href="expenses"><li >
       <span class="pane-icon">
         <i class="fas fa-money-check-alt"></i>
       </span>
       <span class="pane-text">
          Expense
       </span>
-    </li>
+    </li></a>
 
 
-    <li >
+   <a href="debt"> <li >
       <span class="pane-icon">
         <i class="fas fa-coins"></i>
       </span>
       <span class="pane-text">
          Debt
       </span>
-    </li>
+    </li></a>
 
     <a href="staff"> <li >
       <span class="pane-icon">
